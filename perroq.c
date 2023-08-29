@@ -24,14 +24,15 @@ void enreg_perroquet(const char *perroquet)
 void loadPerroquet(char *perroquet, int long_max)
 
 {
-    FILE *perroquet_file = fopen("peroq.def.txt", "rt");
+    FILE *perroquet_file = fopen("peroq.def", "rt");
     if (perroquet_file == NULL)
     {
         printf("Erreur lors de l'ouverture du fichier");
         return EXIT_FAILURE;
     }
 
-    fread(perroquet, sizeof(char), long_max -1 , perroquet_file);
+    fread(perroquet, sizeof(char), strlen(perroquet) , perroquet_file);
+
     perroquet[long_max - 1] = '\0'; // ON s'assure que  la chaine est bien terminé
     fclose(perroquet_file);
 }
@@ -50,8 +51,8 @@ void chiffr_text(char *text, const char *perroquet)
 
     for (int i = 0; i < text_long; i++)
     {
-        char chiffr_char = text[i] - perroquet[i % perroquet_long] + 'a'; // a pour qu'il revienne sur la plage ascii
-        putchar(chiffr_char);
+        text[i] = text[i] - perroquet[i % perroquet_long]; //pour modifier le texte directement
+        //putchar(text);
     }
 }
 
@@ -62,9 +63,9 @@ int chiffr_file(const char *perroquet, const char *source_name, const char *dest
 {
     char source_text[1000];
 
-    printf("Entrez votre perroquet : ");
-    fgets(perroquet, sizeof(perroquet), stdin);
-    enreg_perroquet(perroquet);
+    //printf("Entrez votre perroquet : ");
+    //fgets(perroquet, sizeof(perroquet), stdin);
+    //enreg_perroquet(perroquet);
 
     //sloadPerroquet(perroquet, sizeof(perroquet));
 
@@ -74,7 +75,7 @@ int chiffr_file(const char *perroquet, const char *source_name, const char *dest
         printf("Erreur");
         return 0;
     }
-    if (fgets(source_text, sizeof(source_text), source_file) == NULL)
+    if (fgets(source_text, sizeof(source_text), source_file) == NULL) //on lit lt fichier et on le met dabs la chaine source_texte
 
     {
         printf("Erreur lors de la lecture du fichier source");
@@ -83,21 +84,32 @@ int chiffr_file(const char *perroquet, const char *source_name, const char *dest
     }
     fclose(source_file);
 
-    chiffr_text(source_text, perroquet);
+    char source_copy[1000];
+    strcpy(source_copy,source_text); //on copie pour eviter la perte
+
+    chiffr_text(source_copy, perroquet); //on utilise la fonction de chiffrage
 
     FILE *dest_file = fopen(dest_name, "w+t");
-    if (dest_file == NULL) {
-        perror("Impossible d'écrire dans le fichier dest_name");
-        return 0;
+    if (dest_file == NULL)
+    {
+        printf("Impossible d'écrire dans le fichier dest_name");
+        return 1;
     }
-    fputs(source_text, dest_file);
+
+    for (int i = 0; source_copy[i] != '\0'; i++)
+    {
+        fprintf(dest_file, "%d", (int)source_copy[i]); //on met chaque chiffre dans le fichier dest 1 à 1 en supprimant les espaces
+    }
+
+    //printf("Texte chiffré : %s\n", source_copy);
+    //fputs(source_copy, dest_file);
     fclose(dest_file);
 
-    supp_file(source_name);
+    supp_file(source_name); //on supprime le fichier source
 
     printf("Le texte encrypt se trouve dans dest.crt\n");
 
-    return 1;
+    return 0;
 }
 
 

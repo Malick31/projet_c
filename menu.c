@@ -14,7 +14,8 @@ void Menu()
     char dest_name[] = "dest.crt";
 
     printf("Entrez votre perroquet : ");
-    fgets(perroquet, sizeof(perroquet), stdin);
+    //fgets(perroquet, sizeof(perroquet), stdin);
+    gets(perroquet);// on récupère la chaine de caractère entrée par l'utilisateur
     //perroquet[strcspn(perroquet, "\n")] = '\0';
     enreg_perroquet(perroquet);
 
