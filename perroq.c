@@ -4,6 +4,20 @@
 #include "perroq.h"
 
 
+//Enregistrer le peroquet dans un fichier perof.def
+void enreg_perroquet(const char *perroquet)
+{
+    FILE *perroquet_file = fopen("peroq.def", "w+t");
+    if (perroquet_file == NULL)
+    {
+        printf("Erreur pour ecrire dans ce fichier");
+        return;
+    }
+    fputs(perroquet, perroquet_file);
+    fclose(perroquet_file);
+
+    printf("Bien enregistré\n");
+}
 
 // fontion loadPerroquet Cette fonction est responsable du chargement du perroquet à partir du fichier "peroq.def" dans le tableau de caractères perroquet
 
@@ -47,6 +61,12 @@ void chiffr_text(char *text, const char *perroquet)
 int chiffr_file(const char *perroquet, const char *source_name, const char *dest_name)
 {
     char source_text[1000];
+
+    printf("Entrez votre perroquet : ");
+    fgets(perroquet, sizeof(perroquet), stdin);
+    enreg_perroquet(perroquet);
+
+    //sloadPerroquet(perroquet, sizeof(perroquet));
 
     FILE *source_file = fopen(source_name, "rt");
     if (source_file == NULL)

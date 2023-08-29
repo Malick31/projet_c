@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "choix.h"
+#include <stdio.h>
+#include <string.h>
 #include "perroq.h"
 #include <stdlib.h>
 
@@ -10,6 +12,11 @@ void Menu()
     char perroquet[256];
     char source_name[] = "source.txt";
     char dest_name[] = "dest.crt";
+
+    printf("Entrez votre perroquet : ");
+    fgets(perroquet, sizeof(perroquet), stdin);
+    //perroquet[strcspn(perroquet, "\n")] = '\0';
+    enreg_perroquet(perroquet);
 
     loadPerroquet(perroquet, sizeof(perroquet));
 
@@ -25,6 +32,7 @@ void Menu()
         switch (choix)
         {
             case 1:
+
                 chiffr_file(perroquet, source_name, dest_name);
                 break;
             case 2:
